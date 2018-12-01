@@ -5,6 +5,8 @@ import pl.manufacturer.object.example.extended.ExtendedBooleanStringObject;
 import pl.manufacturer.object.example.extended.ExtendedListOfStringsObject;
 import pl.manufacturer.object.example.simple.*;
 
+import java.time.LocalDateTime;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ManufacturerFactoryTest {
@@ -135,6 +137,12 @@ public class ManufacturerFactoryTest {
         // then
         assertThat(object).isNotNull();
         assertThat(object.getStringObjects()).isNotNull();
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void shouldThrowRuntimeExceptionWhileInstantiatingClassExceptionOccured() {
+        // when
+        manufacturerFactory.generatePojo(LocalDateTime.class);
     }
 
     @Test
