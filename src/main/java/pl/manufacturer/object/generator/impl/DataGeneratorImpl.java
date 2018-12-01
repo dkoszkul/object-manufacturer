@@ -4,6 +4,8 @@ import pl.manufacturer.object.generator.DataGenerator;
 import pl.manufacturer.object.util.ArgumentTypeUtil;
 import pl.manufacturer.object.util.BasicTypeValueGeneratorUtil;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
@@ -25,7 +27,10 @@ public class DataGeneratorImpl implements DataGenerator {
 
     @Override
     public <T> void generateDataForArray(T object, Method setterMethod, Class setterArgumentType) {
-        System.out.println("Array");
+        Object array = Array.newInstance(setterArgumentType.getComponentType(), BASE_ARRAY_SIZE);
+        IntStream.range(0, BASE_ARRAY_SIZE)
+                .forEach(i -> Array.set(array, i, generateBaseTypeValue(setterArgumentType.getComponentType())));
+        invokeSetterMethod(object, setterMethod, array);
     }
 
     @Override

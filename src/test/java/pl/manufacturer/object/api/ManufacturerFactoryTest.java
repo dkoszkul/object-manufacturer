@@ -1,6 +1,7 @@
 package pl.manufacturer.object.api;
 
 import org.junit.Test;
+import pl.manufacturer.object.example.extended.ExtendedArrayOfStringsObject;
 import pl.manufacturer.object.example.extended.ExtendedBooleanStringObject;
 import pl.manufacturer.object.example.extended.ExtendedListOfStringsObject;
 import pl.manufacturer.object.example.extended.ExtendedSetOfStringsObject;
@@ -138,6 +139,7 @@ public class ManufacturerFactoryTest {
         // then
         assertThat(object).isNotNull();
         assertThat(object.getStringObjects()).isNotNull().hasSize(2);
+        object.getStringObjects().forEach(o -> assertThat(o).isNotNull().isNotEmpty());
     }
 
     @Test
@@ -148,6 +150,20 @@ public class ManufacturerFactoryTest {
         // then
         assertThat(object).isNotNull();
         assertThat(object.getStringObjects()).isNotNull().hasSize(2);
+        object.getStringObjects().forEach(o -> assertThat(o).isNotNull().isNotEmpty());
+    }
+
+    @Test
+    public void shouldGenerateExtendedArrayOfStringsObject() {
+        // when
+        ExtendedArrayOfStringsObject object = manufacturerFactory.generatePojo(ExtendedArrayOfStringsObject.class);
+
+        // then
+        assertThat(object).isNotNull();
+        assertThat(object.getArray()).isNotNull().hasSize(2);
+        for(int i = 0; i< object.getArray().length; i++) {
+            assertThat(object.getArray()[i]).isNotNull().isNotEmpty();
+        }
     }
 
     @Test(expected = RuntimeException.class)
