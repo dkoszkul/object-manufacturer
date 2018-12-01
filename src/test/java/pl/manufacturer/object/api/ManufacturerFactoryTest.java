@@ -3,6 +3,7 @@ package pl.manufacturer.object.api;
 import org.junit.Test;
 import pl.manufacturer.object.example.extended.ExtendedBooleanStringObject;
 import pl.manufacturer.object.example.extended.ExtendedListOfStringsObject;
+import pl.manufacturer.object.example.extended.ExtendedSetOfStringsObject;
 import pl.manufacturer.object.example.simple.*;
 
 import java.time.LocalDateTime;
@@ -136,7 +137,17 @@ public class ManufacturerFactoryTest {
 
         // then
         assertThat(object).isNotNull();
-        assertThat(object.getStringObjects()).isNotNull();
+        assertThat(object.getStringObjects()).isNotNull().hasSize(2);
+    }
+
+    @Test
+    public void shouldGenerateExtendedSetOfSimpleObjects() {
+        // when
+        ExtendedSetOfStringsObject object = manufacturerFactory.generatePojo(ExtendedSetOfStringsObject.class);
+
+        // then
+        assertThat(object).isNotNull();
+        assertThat(object.getStringObjects()).isNotNull().hasSize(2);
     }
 
     @Test(expected = RuntimeException.class)

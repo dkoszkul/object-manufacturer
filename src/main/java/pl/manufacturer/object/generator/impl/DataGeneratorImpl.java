@@ -6,8 +6,11 @@ import pl.manufacturer.object.util.BasicTypeValueGeneratorUtil;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static pl.manufacturer.object.util.MethodUtil.invokeSetterMethod;
 
@@ -28,9 +31,14 @@ public class DataGeneratorImpl implements DataGenerator {
     @Override
     public <T> void generateDataForCollection(T object, Method setterMethod) {
         Class iterableType = ArgumentTypeUtil.getCollectionArgumentTypeFromSetterMethod(setterMethod);
-        Collection collection = IntStream.range(0, BASE_ARRAY_SIZE)
-                .mapToObj(i -> generateBaseTypeValue(iterableType))
-                .collect(Collectors.toList());
+        Stream valuesStream = IntStream.range(0, BASE_ARRAY_SIZE)
+                .mapToObj(i -> generateBaseTypeValue(iterableType));
+        Collection collection = null;
+        if(List.class.equals(setterMethod.getParameterTypes()[0])){
+            collection = (Collection) valuesStream.collect(Collectors.toList());
+        } else if(Set.class.equals(setterMethod.getParameterTypes()[0])){
+            collection = (Collection) valuesStream.collect(Collectors.toSet());
+        }
         invokeSetterMethod(object, setterMethod, collection);
     }
 
