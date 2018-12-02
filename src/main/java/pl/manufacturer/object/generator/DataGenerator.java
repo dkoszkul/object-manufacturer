@@ -9,4 +9,8 @@ public interface DataGenerator {
     <T> void generateDataForArray(T object, Method setterMethod, Class setterArgumentType);
 
     <T> void generateDataForCollection(T object, Method setterMethod);
+
+    <T> void generateDataForMap(T object, Method setterMethod);
+
+    Object generateBaseTypeValue(Class setterArgumentType);
 }

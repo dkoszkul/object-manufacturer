@@ -1,10 +1,7 @@
 package pl.manufacturer.object.api;
 
 import org.junit.Test;
-import pl.manufacturer.object.example.extended.ExtendedArrayOfStringsObject;
-import pl.manufacturer.object.example.extended.ExtendedBooleanStringObject;
-import pl.manufacturer.object.example.extended.ExtendedListOfStringsObject;
-import pl.manufacturer.object.example.extended.ExtendedSetOfStringsObject;
+import pl.manufacturer.object.example.extended.*;
 import pl.manufacturer.object.example.simple.*;
 
 import java.time.LocalDateTime;
@@ -18,7 +15,7 @@ public class ManufacturerFactoryTest {
     @Test
     public void shouldGenerateExampleSimpleStringObject() {
         // when
-        SimpleStringObject object = manufacturerFactory.generatePojo(SimpleStringObject.class);
+        SimpleStringObject object = manufacturerFactory.generateObject(SimpleStringObject.class);
 
         // then
         assertThat(object).isNotNull();
@@ -28,7 +25,7 @@ public class ManufacturerFactoryTest {
     @Test
     public void shouldGenerateExampleSimpleBooleanObject() {
         // when
-        SimpleBooleanObject object = manufacturerFactory.generatePojo(SimpleBooleanObject.class);
+        SimpleBooleanObject object = manufacturerFactory.generateObject(SimpleBooleanObject.class);
 
         // then
         assertThat(object).isNotNull();
@@ -39,7 +36,7 @@ public class ManufacturerFactoryTest {
     @Test
     public void shouldGenerateExampleSimpleIntegerObject() {
         // when
-        SimpleIntegerObject object = manufacturerFactory.generatePojo(SimpleIntegerObject.class);
+        SimpleIntegerObject object = manufacturerFactory.generateObject(SimpleIntegerObject.class);
 
         // then
         assertThat(object).isNotNull();
@@ -50,7 +47,7 @@ public class ManufacturerFactoryTest {
     @Test
     public void shouldGenerateExampleSimpleDoubleObject() {
         // when
-        SimpleDoubleObject object = manufacturerFactory.generatePojo(SimpleDoubleObject.class);
+        SimpleDoubleObject object = manufacturerFactory.generateObject(SimpleDoubleObject.class);
 
         // then
         assertThat(object).isNotNull();
@@ -61,7 +58,7 @@ public class ManufacturerFactoryTest {
     @Test
     public void shouldGenerateExampleSimpleFloatObject() {
         // when
-        SimpleFloatObject object = manufacturerFactory.generatePojo(SimpleFloatObject.class);
+        SimpleFloatObject object = manufacturerFactory.generateObject(SimpleFloatObject.class);
 
         // then
         assertThat(object).isNotNull();
@@ -72,7 +69,7 @@ public class ManufacturerFactoryTest {
     @Test
     public void shouldGenerateExampleSimpleLongObject() {
         // when
-        SimpleLongObject object = manufacturerFactory.generatePojo(SimpleLongObject.class);
+        SimpleLongObject object = manufacturerFactory.generateObject(SimpleLongObject.class);
 
         // then
         assertThat(object).isNotNull();
@@ -83,7 +80,7 @@ public class ManufacturerFactoryTest {
     @Test
     public void shouldGenerateExampleSimpleCharacterObject() {
         // when
-        SimpleCharacterObject object = manufacturerFactory.generatePojo(SimpleCharacterObject.class);
+        SimpleCharacterObject object = manufacturerFactory.generateObject(SimpleCharacterObject.class);
 
         // then
         assertThat(object).isNotNull();
@@ -94,7 +91,7 @@ public class ManufacturerFactoryTest {
     @Test
     public void shouldGenerateExampleSimpleByteObject() {
         // when
-        SimpleByteObject object = manufacturerFactory.generatePojo(SimpleByteObject.class);
+        SimpleByteObject object = manufacturerFactory.generateObject(SimpleByteObject.class);
 
         // then
         assertThat(object).isNotNull();
@@ -105,7 +102,7 @@ public class ManufacturerFactoryTest {
     @Test
     public void shouldGenerateExampleSimpleShortObject() {
         // when
-        SimpleShortObject object = manufacturerFactory.generatePojo(SimpleShortObject.class);
+        SimpleShortObject object = manufacturerFactory.generateObject(SimpleShortObject.class);
 
         // then
         assertThat(object).isNotNull();
@@ -116,7 +113,7 @@ public class ManufacturerFactoryTest {
     @Test
     public void shouldGenerateExtendedObject() {
         // when
-        ExtendedBooleanStringObject object = manufacturerFactory.generatePojo(ExtendedBooleanStringObject.class);
+        ExtendedBooleanStringObject object = manufacturerFactory.generateObject(ExtendedBooleanStringObject.class);
 
         // then
         assertThat(object).isNotNull();
@@ -134,7 +131,7 @@ public class ManufacturerFactoryTest {
     @Test
     public void shouldGenerateExtendedListOfSimpleObjects() {
         // when
-        ExtendedListOfStringsObject object = manufacturerFactory.generatePojo(ExtendedListOfStringsObject.class);
+        ExtendedListOfStringsObject object = manufacturerFactory.generateObject(ExtendedListOfStringsObject.class);
 
         // then
         assertThat(object).isNotNull();
@@ -145,7 +142,7 @@ public class ManufacturerFactoryTest {
     @Test
     public void shouldGenerateExtendedSetOfSimpleObjects() {
         // when
-        ExtendedSetOfStringsObject object = manufacturerFactory.generatePojo(ExtendedSetOfStringsObject.class);
+        ExtendedSetOfStringsObject object = manufacturerFactory.generateObject(ExtendedSetOfStringsObject.class);
 
         // then
         assertThat(object).isNotNull();
@@ -156,7 +153,7 @@ public class ManufacturerFactoryTest {
     @Test
     public void shouldGenerateExtendedArrayOfStringsObject() {
         // when
-        ExtendedArrayOfStringsObject object = manufacturerFactory.generatePojo(ExtendedArrayOfStringsObject.class);
+        ExtendedArrayOfStringsObject object = manufacturerFactory.generateObject(ExtendedArrayOfStringsObject.class);
 
         // then
         assertThat(object).isNotNull();
@@ -166,17 +163,32 @@ public class ManufacturerFactoryTest {
         }
     }
 
+    @Test
+    public void shouldGenerateExtendedMapStringStringObject() {
+        // when
+        ExtendedMapStringStringObject object = manufacturerFactory.generateObject(ExtendedMapStringStringObject.class);
+
+        // then
+        assertThat(object).isNotNull();
+        assertThat(object.getMap()).isNotNull().hasSize(2);
+        object.getMap().forEach((s, s2) -> {
+            assertThat(s).isNotNull().isNotEmpty();
+            assertThat(s2).isNotNull().isNotEmpty();
+        });
+
+    }
+
     @Test(expected = RuntimeException.class)
     public void shouldThrowRuntimeExceptionWhileInstantiatingClassExceptionOccured() {
         // when
-        manufacturerFactory.generatePojo(LocalDateTime.class);
+        manufacturerFactory.generateObject(LocalDateTime.class);
     }
 
     @Test
     public void checkPerformance() {
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < 1000000; i++) {
-            manufacturerFactory.generatePojo(ExtendedBooleanStringObject.class);
+            manufacturerFactory.generateObject(ExtendedBooleanStringObject.class);
         }
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;

@@ -4,9 +4,7 @@ import pl.manufacturer.object.generator.DataGenerator;
 import pl.manufacturer.object.util.ArgumentTypeUtil;
 import pl.manufacturer.object.util.BasicTypeValueGeneratorUtil;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -47,8 +45,15 @@ public class DataGeneratorImpl implements DataGenerator {
         invokeSetterMethod(object, setterMethod, collection);
     }
 
+    @Override
+    public <T> void generateDataForMap(T object, Method setterMethod) {
+        ParameterizedType genericParameterType = (ParameterizedType) setterMethod.getGenericParameterTypes()[0];
+        Class keyClass = (Class) genericParameterType.getActualTypeArguments()[0];
+        Class valueClass = (Class) genericParameterType.getActualTypeArguments()[1];
+    }
 
-    private Object generateBaseTypeValue(Class setterArgumentType) {
+    @Override
+    public Object generateBaseTypeValue(Class setterArgumentType) {
         if (setterArgumentType.equals(String.class)) {
             return BasicTypeValueGeneratorUtil.generateString();
         } else if (setterArgumentType.equals(Boolean.class) || setterArgumentType.equals(Boolean.TYPE)) {
