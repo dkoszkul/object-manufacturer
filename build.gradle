@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'jacoco'
+apply plugin: 'maven-publish'
 
 group 'pl.manufacturer'
 version '1.0-SNAPSHOT'
@@ -24,3 +25,11 @@ jacocoTestReport {
 }
 
 check.dependsOn jacocoTestReport
+
+publishing {
+    publications {
+        jarModule(MavenPublication) {
+            from components.java
+        }
+    }
+}
