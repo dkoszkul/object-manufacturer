@@ -29,7 +29,7 @@ public class ArgumentTypeUtilTest {
         }
 
         @Parameterized.Parameters
-        public static Collection primeNumbers() {
+        public static Collection parameters() {
             return Arrays.asList(new Object[][]{
                     {Long.class, true},
                     {Long.TYPE, true},

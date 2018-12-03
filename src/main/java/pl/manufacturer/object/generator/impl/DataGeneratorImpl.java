@@ -1,56 +1,10 @@
 package pl.manufacturer.object.generator.impl;
 
+import pl.manufacturer.object.exception.NotABaseClassException;
 import pl.manufacturer.object.generator.DataGenerator;
-import pl.manufacturer.object.util.ArgumentTypeUtil;
 import pl.manufacturer.object.util.BasicTypeValueGeneratorUtil;
 
-import java.lang.reflect.*;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
-import static pl.manufacturer.object.util.MethodUtil.invokeSetterMethod;
-
 public class DataGeneratorImpl implements DataGenerator {
-
-    private static final int BASE_ARRAY_SIZE = 2;
-
-    @Override
-    public <T> void generateDataForBaseType(T object, Method setterMethod, Class setterArgumentType) {
-        invokeSetterMethod(object, setterMethod, generateBaseTypeValue(setterArgumentType));
-    }
-
-    @Override
-    public <T> void generateDataForArray(T object, Method setterMethod, Class setterArgumentType) {
-        Object array = Array.newInstance(setterArgumentType.getComponentType(), BASE_ARRAY_SIZE);
-        IntStream.range(0, BASE_ARRAY_SIZE)
-                .forEach(i -> Array.set(array, i, generateBaseTypeValue(setterArgumentType.getComponentType())));
-        invokeSetterMethod(object, setterMethod, array);
-    }
-
-    @Override
-    public <T> void generateDataForCollection(T object, Method setterMethod) {
-        Class iterableType = ArgumentTypeUtil.getCollectionArgumentTypeFromSetterMethod(setterMethod);
-        Stream valuesStream = IntStream.range(0, BASE_ARRAY_SIZE)
-                .mapToObj(i -> generateBaseTypeValue(iterableType));
-        Collection collection = null;
-        if(List.class.equals(setterMethod.getParameterTypes()[0])){
-            collection = (Collection) valuesStream.collect(Collectors.toList());
-        } else if(Set.class.equals(setterMethod.getParameterTypes()[0])){
-            collection = (Collection) valuesStream.collect(Collectors.toSet());
-        }
-        invokeSetterMethod(object, setterMethod, collection);
-    }
-
-    @Override
-    public <T> void generateDataForMap(T object, Method setterMethod) {
-        ParameterizedType genericParameterType = (ParameterizedType) setterMethod.getGenericParameterTypes()[0];
-        Class keyClass = (Class) genericParameterType.getActualTypeArguments()[0];
-        Class valueClass = (Class) genericParameterType.getActualTypeArguments()[1];
-    }
 
     @Override
     public Object generateBaseTypeValue(Class setterArgumentType) {
@@ -73,6 +27,6 @@ public class DataGeneratorImpl implements DataGenerator {
         } else if (setterArgumentType.equals(Short.class) || setterArgumentType.equals(Short.TYPE)) {
             return BasicTypeValueGeneratorUtil.generateShort();
         }
-        return null;
+        throw new NotABaseClassException("Class " + setterArgumentType + " is not a base class.");
     }
 }

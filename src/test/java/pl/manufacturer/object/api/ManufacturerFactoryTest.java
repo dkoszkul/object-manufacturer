@@ -3,6 +3,7 @@ package pl.manufacturer.object.api;
 import org.junit.Test;
 import pl.manufacturer.object.example.extended.*;
 import pl.manufacturer.object.example.simple.*;
+import pl.manufacturer.object.generator.impl.DataGeneratorImpl;
 
 import java.time.LocalDateTime;
 
@@ -10,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ManufacturerFactoryTest {
 
-    private ManufacturerFactory manufacturerFactory = new ManufacturerFactory();
+    private ManufacturerFactory manufacturerFactory = new ManufacturerFactory(new DataGeneratorImpl());
 
     @Test
     public void shouldGenerateExampleSimpleStringObject() {
