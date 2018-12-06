@@ -28,12 +28,12 @@ public class ManufacturerFactory {
     public <T> T generateObject(Class<T> clazz, Type... classArgsTypes) {
         if (ArgumentTypeUtil.isBaseType(clazz)) {
             return (T) dataGenerator.generateBaseTypeValue(clazz);
-        } else if(clazz.isArray()) {
+        } else if (clazz.isArray()) {
             return (T) generateArray(clazz.getComponentType());
-        } else if(Collection.class.isAssignableFrom(clazz)) {
+        } else if (Collection.class.isAssignableFrom(clazz)) {
             return (T) generateCollection(clazz, (Class) classArgsTypes[0]);
         } else if (Map.class.isAssignableFrom(clazz)) {
-            return (T) generateMap((Class) classArgsTypes[0], (Class) classArgsTypes[1]);
+            return (T) generateMap(classArgsTypes[0], classArgsTypes[1]);
         }
 
         T object = instantiateClass(clazz);
@@ -56,28 +56,8 @@ public class ManufacturerFactory {
                 ParameterizedType genericParameterType = (ParameterizedType) setterMethod.getGenericParameterTypes()[0];
                 Type keyType = genericParameterType.getActualTypeArguments()[0];
                 Type valueType = genericParameterType.getActualTypeArguments()[1];
-                /////////////////////////////////////////////////////////////////////////
-                Class keyClass;
-                if(!isInstanceOfClass(keyType)) {
-                    System.out.println("   key class is NOT an instance of Class");
 
-                    keyClass = (Class) ((ParameterizedType)genericParameterType.getActualTypeArguments()[0]).getRawType();
-                } else {
-                    keyClass = (Class) keyType;
-                }
-
-                Class valueClass;
-                if(!isInstanceOfClass(valueType)) {
-                    valueClass = (Class) ((ParameterizedType)genericParameterType.getActualTypeArguments()[1]).getRawType();
-                }else {
-                    valueClass = (Class) valueType;
-                }
-
-                System.out.println(">>>>Key class " + keyType + " is base: " + ArgumentTypeUtil.isBaseType(keyType) + " | " + isInstanceOfClass(keyType));
-                System.out.println("----Value class " + valueType + " is base: " + ArgumentTypeUtil.isBaseType(valueType) + " | " + isInstanceOfClass(valueType));
-
-                /////////////////////////////////////////////////////////////////////////
-                Map map = generateMap(keyClass, valueClass);
+                Map map = generateMap(keyType, valueType);
                 invokeMethod(object, setterMethod, map);
             } else {
                 invokeMethod(object, setterMethod, generateObject(setterArgumentClass));
@@ -106,20 +86,45 @@ public class ManufacturerFactory {
 
     }
 
-    private Map generateMap(Class keyClass, Class valueClass) {
+    private Map generateMap(Object keyObject, Object valueObject) {
         Map map = new HashMap();
         Method putMethod = MethodUtil.getMethod(map.getClass(), "put");
 
-        for (int i = 0; i < BASE_ARRAY_SIZE; i++) {
-            Object key = generateObject(keyClass);
-            Object value = generateObject(valueClass);
-            MethodUtil.invokeMethod(map, putMethod, key, value);
-        }
+        Class keyClass = isInstanceOfClass(keyObject) ? (Class) keyObject : null;
+        Class valueClass = isInstanceOfClass(valueObject) ? (Class) valueObject : null;
+
+        ParameterizedType keyParametrizedType = keyObject instanceof ParameterizedType ? (ParameterizedType) keyObject : null;
+        ParameterizedType valueParametrizedType = valueObject instanceof ParameterizedType ? (ParameterizedType) valueObject : null;
+
+        IntStream.range(0, BASE_ARRAY_SIZE)
+                .mapToObj(i -> generateMapElement(keyClass, keyParametrizedType, keyParametrizedType))
+                .forEach(key -> {
+                    Object value = generateMapElement(valueClass, keyParametrizedType, valueParametrizedType);
+                    invokeMethod(map, putMethod, key, value);
+                });
 
         return map;
     }
 
-    private boolean isInstanceOfClass(Type type) {
+    private Object generateMapElement(Class valueClass, ParameterizedType keyParametrizedType, ParameterizedType valueParametrizedType) {
+        Object value = null;
+        if (valueClass != null) {
+            value = generateObject(valueClass);
+        } else if (keyParametrizedType != null) {
+            Type rawType = valueParametrizedType.getRawType();
+            if (List.class.equals(rawType)) {
+                Type argument0 = valueParametrizedType.getActualTypeArguments()[0];
+                value = generateObject((Class) rawType, argument0);
+            } else if (Map.class.equals(rawType)) {
+                Type argument0 = valueParametrizedType.getActualTypeArguments()[0];
+                Type argument1 = valueParametrizedType.getActualTypeArguments()[1];
+                value = generateObject((Class) rawType, argument0, argument1);
+            }
+        }
+        return value;
+    }
+
+    private boolean isInstanceOfClass(Object type) {
         return type instanceof Class;
     }
 

@@ -181,11 +181,13 @@ public class ManufacturerFactoryTest {
         });
     }
 
-    @Ignore
     @Test
     public void shouldGenerateExtendedMixOfEverythingObject() {
         // when
         ExtendedMixOfEverythingObject object = manufacturerFactory.generateObject(ExtendedMixOfEverythingObject.class);
+
+        // then
+        assertThat(object).isNotNull();
     }
 
     @Test(expected = RuntimeException.class)
