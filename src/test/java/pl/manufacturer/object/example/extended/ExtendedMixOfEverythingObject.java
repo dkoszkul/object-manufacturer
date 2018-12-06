@@ -11,6 +11,8 @@ public class ExtendedMixOfEverythingObject {
 
     private Map<Map<String, SimpleBooleanObject>, String> map2;
 
+    private Map<List<Integer>, Map<Long, Integer>> map3;
+
     private List<ExtendedListOfStringsObject> list1;
 
     private String string1;
@@ -35,6 +37,14 @@ public class ExtendedMixOfEverythingObject {
 
     public void setMap2(Map<Map<String, SimpleBooleanObject>, String> map2) {
         this.map2 = map2;
+    }
+
+    public Map<List<Integer>, Map<Long, Integer>> getMap3() {
+        return map3;
+    }
+
+    public void setMap3(Map<List<Integer>, Map<Long, Integer>> map3) {
+        this.map3 = map3;
     }
 
     public List<ExtendedListOfStringsObject> getList1() {
