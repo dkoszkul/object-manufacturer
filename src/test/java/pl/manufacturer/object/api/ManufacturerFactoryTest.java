@@ -1,11 +1,14 @@
 package pl.manufacturer.object.api;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import pl.manufacturer.object.example.extended.*;
 import pl.manufacturer.object.example.simple.*;
 import pl.manufacturer.object.generator.impl.DataGeneratorImpl;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -159,7 +162,7 @@ public class ManufacturerFactoryTest {
         // then
         assertThat(object).isNotNull();
         assertThat(object.getArray()).isNotNull().hasSize(2);
-        for(int i = 0; i< object.getArray().length; i++) {
+        for (int i = 0; i < object.getArray().length; i++) {
             assertThat(object.getArray()[i]).isNotNull().isNotEmpty();
         }
     }
@@ -176,7 +179,13 @@ public class ManufacturerFactoryTest {
             assertThat(s).isNotNull().isNotEmpty();
             assertThat(s2).isNotNull().isNotEmpty();
         });
+    }
 
+    @Ignore
+    @Test
+    public void shouldGenerateExtendedMixOfEverythingObject() {
+        // when
+        ExtendedMixOfEverythingObject object = manufacturerFactory.generateObject(ExtendedMixOfEverythingObject.class);
     }
 
     @Test(expected = RuntimeException.class)
@@ -185,6 +194,39 @@ public class ManufacturerFactoryTest {
         manufacturerFactory.generateObject(LocalDateTime.class);
     }
 
+    @Test
+    public void shouldGenerateListOfStrings() {
+        // when
+        List<String> result = manufacturerFactory.generateObject(List.class, String.class);
+
+        // then
+        assertThat(result).isNotNull().hasSize(2);
+        result.forEach(value -> assertThat(value).isNotNull().isNotEmpty());
+    }
+
+    @Test
+    public void shouldGenerateStringArray() {
+        // when
+        String[] result = manufacturerFactory.generateObject(String[].class);
+
+        // then
+        assertThat(result).isNotNull().hasSize(2);
+    }
+
+    @Test
+    public void shouldGenerateSimpleMapIntegerString() {
+        // when
+        Map<Integer, String> result = manufacturerFactory.generateObject(Map.class, Integer.class, String.class);
+
+        // then
+        assertThat(result.size()).isEqualTo(2);
+        result.forEach((key, value) -> {
+            assertThat(key).isNotNull();
+            assertThat(value).isNotNull().isNotEmpty();
+        });
+    }
+
+    @Ignore
     @Test
     public void checkPerformance() {
         long startTime = System.currentTimeMillis();

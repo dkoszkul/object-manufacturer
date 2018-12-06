@@ -9,7 +9,7 @@ public class ArgumentTypeUtil {
     private ArgumentTypeUtil() {
     }
 
-    public static boolean isBaseType(Class<?> type) {
+    public static boolean isBaseType(Type type) {
         return type.equals(String.class) ||
 
                 type.equals(Boolean.class) ||
