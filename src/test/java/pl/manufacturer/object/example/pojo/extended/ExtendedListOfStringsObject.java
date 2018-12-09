@@ -1,4 +1,4 @@
-package pl.manufacturer.object.example.extended;
+package pl.manufacturer.object.example.pojo.extended;
 
 import java.util.List;
 

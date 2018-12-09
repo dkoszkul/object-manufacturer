@@ -1,6 +1,6 @@
-package pl.manufacturer.object.example.extended;
+package pl.manufacturer.object.example.pojo.extended;
 
-import pl.manufacturer.object.example.simple.SimpleBooleanObject;
+import pl.manufacturer.object.example.pojo.simple.SimpleBooleanObject;
 
 import java.util.List;
 import java.util.Map;

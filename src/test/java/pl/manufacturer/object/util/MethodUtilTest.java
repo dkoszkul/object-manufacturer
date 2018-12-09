@@ -1,8 +1,8 @@
 package pl.manufacturer.object.util;
 
 import org.junit.Test;
-import pl.manufacturer.object.example.simple.SimpleStringObject;
-import pl.manufacturer.object.example.test.ObjectWithTwoTheSameMethodNames;
+import pl.manufacturer.object.example.pojo.simple.SimpleStringObject;
+import pl.manufacturer.object.example.pojo.test.ObjectWithTwoTheSameMethodNames;
 import pl.manufacturer.object.exception.MethodDoesNotExistException;
 import pl.manufacturer.object.exception.MoreThanOneAvailabeMethodException;
 import pl.manufacturer.object.exception.WrongMethodInvocationException;

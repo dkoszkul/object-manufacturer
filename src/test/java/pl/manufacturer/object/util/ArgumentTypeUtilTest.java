@@ -4,8 +4,8 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import pl.manufacturer.object.example.extended.ExtendedListOfStringsObject;
-import pl.manufacturer.object.example.simple.SimpleByteObject;
+import pl.manufacturer.object.example.pojo.extended.ExtendedListOfStringsObject;
+import pl.manufacturer.object.example.pojo.simple.SimpleByteObject;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;

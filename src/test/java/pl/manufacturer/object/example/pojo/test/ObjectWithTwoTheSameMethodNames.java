@@ -1,4 +1,4 @@
-package pl.manufacturer.object.example.test;
+package pl.manufacturer.object.example.pojo.test;
 
 public class ObjectWithTwoTheSameMethodNames {
 

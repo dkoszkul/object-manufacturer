@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import pl.manufacturer.object.example.simple.SimpleByteObject;
+import pl.manufacturer.object.example.pojo.simple.SimpleByteObject;
 import pl.manufacturer.object.exception.NotABaseClassException;
 
 import java.util.Arrays;

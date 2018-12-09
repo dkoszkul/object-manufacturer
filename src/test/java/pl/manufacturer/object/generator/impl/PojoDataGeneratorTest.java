@@ -2,8 +2,8 @@ package pl.manufacturer.object.generator.impl;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import pl.manufacturer.object.example.extended.*;
-import pl.manufacturer.object.example.simple.*;
+import pl.manufacturer.object.example.pojo.extended.*;
+import pl.manufacturer.object.example.pojo.simple.*;
 import pl.manufacturer.object.generator.DataGenerator;
 
 import java.time.LocalDateTime;

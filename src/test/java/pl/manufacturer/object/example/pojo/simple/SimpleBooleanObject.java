@@ -1,4 +1,4 @@
-package pl.manufacturer.object.example.simple;
+package pl.manufacturer.object.example.pojo.simple;
 
 public class SimpleBooleanObject {
 

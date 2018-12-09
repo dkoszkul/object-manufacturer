@@ -1,7 +1,7 @@
-package pl.manufacturer.object.example.extended;
+package pl.manufacturer.object.example.pojo.extended;
 
-import pl.manufacturer.object.example.simple.SimpleBooleanObject;
-import pl.manufacturer.object.example.simple.SimpleStringObject;
+import pl.manufacturer.object.example.pojo.simple.SimpleBooleanObject;
+import pl.manufacturer.object.example.pojo.simple.SimpleStringObject;
 
 public class ExtendedBooleanStringObject {
 
