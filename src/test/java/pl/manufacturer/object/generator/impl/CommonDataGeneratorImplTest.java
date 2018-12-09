@@ -15,9 +15,9 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Parameterized.class)
-public class DataGeneratorImplTest {
+public class CommonDataGeneratorImplTest {
 
-    private DataGeneratorImpl dataGenerator = new DataGeneratorImpl();
+    private CommonDataGeneratorImpl dataGenerator = new CommonDataGeneratorImpl();
 
     private Class clazz;
     private Class expectedClazz;
@@ -26,7 +26,7 @@ public class DataGeneratorImplTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    public DataGeneratorImplTest(Class clazz, Class expectedClazz, Class expectedException) {
+    public CommonDataGeneratorImplTest(Class clazz, Class expectedClazz, Class expectedException) {
         this.clazz = clazz;
         this.expectedClazz = expectedClazz;
         this.expectedException = expectedException;

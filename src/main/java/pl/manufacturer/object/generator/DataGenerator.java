@@ -1,6 +1,7 @@
 package pl.manufacturer.object.generator;
 
-public interface DataGenerator {
+import java.lang.reflect.Type;
 
-    Object generateBaseTypeValue(Class setterArgumentType);
+public interface DataGenerator {
+    <T> T generateObject(Class<T> clazz, Type... classArgsTypes);
 }

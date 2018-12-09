@@ -13,6 +13,8 @@ public class ExtendedMixOfEverythingObject {
 
     private Map<List<Integer>, Map<Long, Integer>> map3;
 
+    private Map<List<Integer>, Map<Map<Integer, Integer>, Integer>> map4;
+
     private List<ExtendedListOfStringsObject> list1;
 
     private String string1;
@@ -45,6 +47,14 @@ public class ExtendedMixOfEverythingObject {
 
     public void setMap3(Map<List<Integer>, Map<Long, Integer>> map3) {
         this.map3 = map3;
+    }
+
+    public Map<List<Integer>, Map<Map<Integer, Integer>, Integer>> getMap4() {
+        return map4;
+    }
+
+    public void setMap4(Map<List<Integer>, Map<Map<Integer, Integer>, Integer>> map4) {
+        this.map4 = map4;
     }
 
     public List<ExtendedListOfStringsObject> getList1() {

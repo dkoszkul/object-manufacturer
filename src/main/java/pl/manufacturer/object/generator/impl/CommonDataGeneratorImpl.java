@@ -1,10 +1,10 @@
 package pl.manufacturer.object.generator.impl;
 
 import pl.manufacturer.object.exception.NotABaseClassException;
-import pl.manufacturer.object.generator.DataGenerator;
+import pl.manufacturer.object.generator.CommonDataGenerator;
 import pl.manufacturer.object.util.BasicTypeValueGeneratorUtil;
 
-public class DataGeneratorImpl implements DataGenerator {
+public class CommonDataGeneratorImpl implements CommonDataGenerator {
 
     @Override
     public Object generateBaseTypeValue(Class setterArgumentType) {
