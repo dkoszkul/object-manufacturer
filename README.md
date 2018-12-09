@@ -12,11 +12,14 @@ Library writing in progress...
 
 ## Code Samples
 
-> ```java
+> 
+```java
 public class ExampleTest {
   private DataGenerator generator = ManufacturerFactory.getGeneratorInstance(GenerationMode.POJO);
+  
   @Test
   public void exampleTest() {
     MyObject object = generator.generateObject(MyObject.class);
+  }
 }
-``` 
+```
