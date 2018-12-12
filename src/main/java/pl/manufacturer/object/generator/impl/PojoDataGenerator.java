@@ -1,6 +1,5 @@
 package pl.manufacturer.object.generator.impl;
 
-import pl.manufacturer.object.generator.CommonDataGenerator;
 import pl.manufacturer.object.generator.DataGenerator;
 import pl.manufacturer.object.util.ArgumentTypeUtil;
 import pl.manufacturer.object.util.MethodUtil;
@@ -16,20 +15,14 @@ import java.util.stream.Stream;
 
 import static pl.manufacturer.object.util.MethodUtil.invokeMethod;
 
-public class PojoDataGenerator implements DataGenerator {
+public class PojoDataGenerator extends CommonDataGenerator implements DataGenerator {
 
     private static final int BASE_ARRAY_SIZE = 2;
-
-    private final CommonDataGenerator commonDataGenerator;
-
-    public PojoDataGenerator(CommonDataGenerator commonDataGenerator) {
-        this.commonDataGenerator = commonDataGenerator;
-    }
 
     @Override
     public <T> T generateObject(Class<T> clazz, Type... classArgsTypes) {
         if (ArgumentTypeUtil.isBaseType(clazz)) {
-            return (T) commonDataGenerator.generateBaseTypeValue(clazz);
+            return (T) generateBaseTypeValue(clazz);
         } else if (clazz.isArray()) {
             return (T) generateArray(clazz.getComponentType());
         } else if (Collection.class.isAssignableFrom(clazz)) {
@@ -128,15 +121,5 @@ public class PojoDataGenerator implements DataGenerator {
 
     private boolean isInstanceOfClass(Object type) {
         return type instanceof Class;
-    }
-
-    private <T> T instantiateClass(Class<T> clazz) {
-        T object;
-        try {
-            object = clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException("Cannot instantiate class " + clazz);
-        }
-        return object;
     }
 }

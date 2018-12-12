@@ -1,6 +1,5 @@
 package pl.manufacturer.object.generator.impl;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import pl.manufacturer.object.example.entity.SimpleEntity;
 import pl.manufacturer.object.example.pojo.simple.SimpleBooleanObject;
@@ -11,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class EntityDataGeneratorTest {
 
-    private DataGenerator dataGenerator = new EntityDataGenerator(new CommonDataGeneratorImpl());
+    private DataGenerator dataGenerator = new EntityDataGenerator();
 
     @Test
     public void shouldNotThrowExceptionIfObjectIsAnEntity() {
@@ -25,7 +24,6 @@ public class EntityDataGeneratorTest {
         dataGenerator.generateObject(SimpleBooleanObject.class);
     }
 
-    @Ignore // TODO: in progress
     @Test
     public void shouldCreateSimpleEntity() {
         // when

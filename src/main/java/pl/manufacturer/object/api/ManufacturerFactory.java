@@ -1,7 +1,6 @@
 package pl.manufacturer.object.api;
 
 import pl.manufacturer.object.generator.DataGenerator;
-import pl.manufacturer.object.generator.impl.CommonDataGeneratorImpl;
 import pl.manufacturer.object.generator.impl.EntityDataGenerator;
 import pl.manufacturer.object.generator.impl.PojoDataGenerator;
 
@@ -14,8 +13,8 @@ public final class ManufacturerFactory {
 
     static {
         generators = new HashMap<>();
-        generators.put(GenerationMode.POJO, new PojoDataGenerator(new CommonDataGeneratorImpl()));
-        generators.put(GenerationMode.ENTITY, new EntityDataGenerator(new CommonDataGeneratorImpl()));
+        generators.put(GenerationMode.POJO, new PojoDataGenerator());
+        generators.put(GenerationMode.ENTITY, new EntityDataGenerator());
     }
 
     private ManufacturerFactory() {

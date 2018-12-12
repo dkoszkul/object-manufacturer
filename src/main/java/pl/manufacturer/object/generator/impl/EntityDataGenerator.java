@@ -1,26 +1,21 @@
 package pl.manufacturer.object.generator.impl;
 
 import pl.manufacturer.object.exception.ObjectIsNotAnEntityException;
-import pl.manufacturer.object.generator.CommonDataGenerator;
 import pl.manufacturer.object.generator.DataGenerator;
 
 import javax.persistence.Entity;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 
-public class EntityDataGenerator implements DataGenerator {
-
-    private final CommonDataGenerator commonDataGenerator;
-
-    public EntityDataGenerator(CommonDataGenerator commonDataGenerator) {
-        this.commonDataGenerator = commonDataGenerator;
-    }
+public class EntityDataGenerator extends CommonDataGenerator implements DataGenerator {
 
     @Override
     public <T> T generateObject(Class<T> clazz, Type... classArgsTypes) {
         if(!isEntity(clazz)) {
             throw new ObjectIsNotAnEntityException("Class " + clazz + " is not an entity. Use GenerationMode.POJO instead.");
         }
+
+        T object = instantiateClass(clazz);
 
         return null;
     }

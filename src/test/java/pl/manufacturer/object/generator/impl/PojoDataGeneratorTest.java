@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class PojoDataGeneratorTest {
 
-    private DataGenerator dataGenerator = new PojoDataGenerator(new CommonDataGeneratorImpl());
+    private DataGenerator dataGenerator = new PojoDataGenerator();
 
     @Test
     public void shouldGenerateExampleSimpleStringObject() {

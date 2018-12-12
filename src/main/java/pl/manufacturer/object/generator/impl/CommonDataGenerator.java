@@ -1,13 +1,11 @@
 package pl.manufacturer.object.generator.impl;
 
 import pl.manufacturer.object.exception.NotABaseClassException;
-import pl.manufacturer.object.generator.CommonDataGenerator;
 import pl.manufacturer.object.util.BasicTypeValueGeneratorUtil;
 
-public class CommonDataGeneratorImpl implements CommonDataGenerator {
+public class CommonDataGenerator {
 
-    @Override
-    public Object generateBaseTypeValue(Class setterArgumentType) {
+    protected Object generateBaseTypeValue(Class setterArgumentType) {
         if (setterArgumentType.equals(String.class)) {
             return BasicTypeValueGeneratorUtil.generateString();
         } else if (setterArgumentType.equals(Boolean.class) || setterArgumentType.equals(Boolean.TYPE)) {
@@ -28,5 +26,15 @@ public class CommonDataGeneratorImpl implements CommonDataGenerator {
             return BasicTypeValueGeneratorUtil.generateShort();
         }
         throw new NotABaseClassException("Class " + setterArgumentType + " is not a base class.");
+    }
+
+    protected <T> T instantiateClass(Class<T> clazz) {
+        T object;
+        try {
+            object = clazz.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException("Cannot instantiate class " + clazz);
+        }
+        return object;
     }
 }
