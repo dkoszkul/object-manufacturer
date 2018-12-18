@@ -9,10 +9,10 @@ public class BasicTypeValueGeneratorUtilTest {
     @Test
     public void shouldGenerateString() {
         // when
-        String result = BasicTypeValueGeneratorUtil.generateString();
+        String result = BasicTypeValueGeneratorUtil.generateString(10);
 
         // then
-        assertThat(result).isNotNull();
+        assertThat(result).isNotEmpty().hasSize(10);
     }
 
     @Test

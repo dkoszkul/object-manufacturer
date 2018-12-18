@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class EntityDataGeneratorTest {
 
-    private DataGenerator dataGenerator = new EntityDataGenerator();
+    private DataGenerator dataGenerator = new EntityDataGenerator(new PojoDataGenerator());
 
     @Test
     public void shouldNotThrowExceptionIfObjectIsAnEntity() {
@@ -30,6 +30,9 @@ public class EntityDataGeneratorTest {
         SimpleEntity result = dataGenerator.generateObject(SimpleEntity.class);
         // then
         assertThat(result).isNotNull();
+        assertThat(result.getId()).isNotNull();
+        assertThat(result.getFirstName()).isNotEmpty().hasSize(100);
+        assertThat(result.getLastName()).isNotEmpty().hasSize(50);
     }
 
 }

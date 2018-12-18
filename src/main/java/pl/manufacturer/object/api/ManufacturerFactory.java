@@ -14,7 +14,7 @@ public final class ManufacturerFactory {
     static {
         generators = new HashMap<>();
         generators.put(GenerationMode.POJO, new PojoDataGenerator());
-        generators.put(GenerationMode.ENTITY, new EntityDataGenerator());
+        generators.put(GenerationMode.ENTITY, new EntityDataGenerator(new PojoDataGenerator()));
     }
 
     private ManufacturerFactory() {

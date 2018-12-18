@@ -5,9 +5,11 @@ import pl.manufacturer.object.util.BasicTypeValueGeneratorUtil;
 
 public class CommonDataGenerator {
 
+    private static final int DEFAULT_LENGTH = 10;
+
     protected Object generateBaseTypeValue(Class setterArgumentType) {
         if (setterArgumentType.equals(String.class)) {
-            return BasicTypeValueGeneratorUtil.generateString();
+            return BasicTypeValueGeneratorUtil.generateString(DEFAULT_LENGTH);
         } else if (setterArgumentType.equals(Boolean.class) || setterArgumentType.equals(Boolean.TYPE)) {
             return BasicTypeValueGeneratorUtil.generateBoolean();
         } else if (setterArgumentType.equals(Integer.class) || setterArgumentType.equals(Integer.TYPE)) {
@@ -26,6 +28,14 @@ public class CommonDataGenerator {
             return BasicTypeValueGeneratorUtil.generateShort();
         }
         throw new NotABaseClassException("Class " + setterArgumentType + " is not a base class.");
+    }
+
+    protected <T> T generateBaseTypeValue(Class<T> setterArgumentType, int length) {
+        if (setterArgumentType.equals(String.class)) {
+            return (T) BasicTypeValueGeneratorUtil.generateString(length);
+        }
+
+        throw new NotABaseClassException("Class " + setterArgumentType + " is not a base class with available length setting.");
     }
 
     protected <T> T instantiateClass(Class<T> clazz) {
