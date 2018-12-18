@@ -44,7 +44,7 @@ public class EntityDataGenerator extends CommonDataGenerator implements DataGene
                 .collect(Collectors.toMap(Method::getName, Function.identity()));
 
         List<Field> nonStaticFields = Arrays.asList(clazz.getDeclaredFields()).stream()
-                .filter(field -> !Modifier.isStatic(field.getModifiers()))
+                .filter(field -> !Modifier.isStatic(field.getModifiers()) || !field.getName().startsWith("$"))
                 .collect(Collectors.toList());
 
         for (Field field : nonStaticFields) {
