@@ -24,6 +24,7 @@ import static pl.manufacturer.object.util.MethodUtil.invokeMethod;
 public class EntityDataGenerator extends CommonDataGenerator implements DataGenerator {
 
     private static final Logger log = LoggerFactory.getLogger(EntityDataGenerator.class);
+    private static final String SETTER_KEYWORD = "set";
 
     private final PojoDataGenerator pojoDataGenerator;
 
@@ -40,7 +41,7 @@ public class EntityDataGenerator extends CommonDataGenerator implements DataGene
         T object = instantiateClass(clazz);
 
         Map<String, Method> setMethodsByNames = Arrays.stream(clazz.getMethods())
-                .filter(method -> method.getName().contains("set"))
+                .filter(method -> method.getName().contains(SETTER_KEYWORD))
                 .collect(Collectors.toMap(Method::getName, Function.identity()));
 
         List<Field> nonStaticFields = Arrays.asList(clazz.getDeclaredFields()).stream()
@@ -74,8 +75,8 @@ public class EntityDataGenerator extends CommonDataGenerator implements DataGene
     }
 
     private String generateSetterMethodNameByFieldName(String name) {
-        String cap = name.substring(0, 1).toUpperCase() + name.substring(1);
-        return "set" + cap;
+        String capitalName = name.substring(0, 1).toUpperCase() + name.substring(1);
+        return SETTER_KEYWORD + capitalName;
     }
 
     private <T> boolean isEntity(Class<T> clazz) {

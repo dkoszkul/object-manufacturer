@@ -8,6 +8,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.time.temporal.Temporal;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -34,7 +35,7 @@ public class PojoDataGenerator extends CommonDataGenerator implements DataGenera
         T object = instantiateClass(clazz);
 
         List<Method> setterMethods = Arrays.stream(clazz.getMethods())
-                .filter(method -> method.getName().contains("set"))
+                .filter(method -> method.getName().startsWith("set"))
                 .collect(Collectors.toList());
 
         setterMethods.forEach(setterMethod -> {
@@ -54,7 +55,9 @@ public class PojoDataGenerator extends CommonDataGenerator implements DataGenera
 
                 Map map = generateMap(keyType, valueType);
                 invokeMethod(object, setterMethod, map);
-            } else {
+            } else if (Date.class.isAssignableFrom(setterArgumentClass)) {
+                invokeMethod(object, setterMethod, new Date());
+            }  else {
                 invokeMethod(object, setterMethod, generateObject(setterArgumentClass));
             }
         });

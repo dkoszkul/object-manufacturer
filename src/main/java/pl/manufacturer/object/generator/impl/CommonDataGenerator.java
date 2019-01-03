@@ -3,6 +3,10 @@ package pl.manufacturer.object.generator.impl;
 import pl.manufacturer.object.exception.NotABaseClassException;
 import pl.manufacturer.object.util.BasicTypeValueGeneratorUtil;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.time.temporal.Temporal;
+
 public class CommonDataGenerator {
 
     private static final int DEFAULT_LENGTH = 10;
@@ -39,12 +43,18 @@ public class CommonDataGenerator {
     }
 
     protected <T> T instantiateClass(Class<T> clazz) {
-        T object;
         try {
-            object = clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+            if (Temporal.class.isAssignableFrom(clazz)) {
+                Method now = clazz.getMethod("now");
+                return (T) now.invoke(null, null);
+            }
+
+            return clazz.newInstance();
+        } catch (NoSuchMethodException |
+                IllegalAccessException |
+                InvocationTargetException |
+                InstantiationException e) {
             throw new RuntimeException("Cannot instantiate class " + clazz);
         }
-        return object;
     }
 }

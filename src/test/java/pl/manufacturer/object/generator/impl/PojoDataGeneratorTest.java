@@ -7,6 +7,7 @@ import pl.manufacturer.object.example.pojo.simple.*;
 import pl.manufacturer.object.generator.DataGenerator;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 import java.util.Map;
 
@@ -113,6 +114,28 @@ public class PojoDataGeneratorTest {
         assertThat(object.getShortObject()).isNotNull();
         assertThat(object.getShortPrimitive()).isNotNull();
     }
+
+    @Test
+    public void shouldGenerateExampleSimpleDateObject() {
+        // when
+        SimpleDateObject object = dataGenerator.generateObject(SimpleDateObject.class);
+
+        // then
+        assertThat(object).isNotNull();
+        assertThat(object.getDate()).isNotNull();
+    }
+
+
+    @Test
+    public void shouldGenerateExampleSimpleLocalDateTimeObject() {
+        // when
+        SimpleLocalDateTimeObject object = dataGenerator.generateObject(SimpleLocalDateTimeObject.class);
+
+        // then
+        assertThat(object).isNotNull();
+        assertThat(object.getLocalDateTime()).isNotNull();
+    }
+
 
     @Test
     public void shouldGenerateExtendedObject() {
@@ -244,7 +267,7 @@ public class PojoDataGeneratorTest {
     @Test(expected = RuntimeException.class)
     public void shouldThrowRuntimeExceptionWhileInstantiatingClassExceptionOccured() {
         // when
-        dataGenerator.generateObject(LocalDateTime.class);
+        dataGenerator.generateObject(Month.class);
     }
 
     @Test
