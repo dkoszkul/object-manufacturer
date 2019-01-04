@@ -52,7 +52,7 @@ public class CommonDataGenerator {
         }
     }
 
-    protected <T> T handleInstatiationException(Class<T> clazz) {
+    protected <T> T handleInstantiationException(Class<T> clazz) {
         try {
             if (Temporal.class.isAssignableFrom(clazz)) {
                 Method now = clazz.getMethod("now");

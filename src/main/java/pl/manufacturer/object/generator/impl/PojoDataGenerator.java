@@ -8,7 +8,6 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.time.temporal.Temporal;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -36,7 +35,7 @@ public class PojoDataGenerator extends CommonDataGenerator implements DataGenera
         try {
             object = instantiateClass(clazz);
         } catch (InstantiationException e) {
-            return handleInstatiationException(clazz);
+            return handleInstantiationException(clazz);
         }
 
         List<Method> setterMethods = Arrays.stream(clazz.getMethods())

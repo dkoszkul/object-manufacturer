@@ -9,7 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
-import java.time.temporal.Temporal;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -37,7 +36,7 @@ public class EntityDataGenerator extends CommonDataGenerator implements DataGene
         try {
             object = instantiateClass(clazz);
         } catch (InstantiationException e) {
-            return handleInstatiationException(clazz);
+            return handleInstantiationException(clazz);
         }
 
         Map<String, Method> setMethodsByNames = Arrays.stream(clazz.getMethods())
