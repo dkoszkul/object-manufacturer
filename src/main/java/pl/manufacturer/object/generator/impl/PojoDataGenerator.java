@@ -32,7 +32,12 @@ public class PojoDataGenerator extends CommonDataGenerator implements DataGenera
             return (T) generateMap(classArgsTypes[0], classArgsTypes[1]);
         }
 
-        T object = instantiateClass(clazz);
+        T object;
+        try {
+            object = instantiateClass(clazz);
+        } catch (InstantiationException e) {
+            return handleInstatiationException(clazz);
+        }
 
         List<Method> setterMethods = Arrays.stream(clazz.getMethods())
                 .filter(method -> method.getName().startsWith("set"))

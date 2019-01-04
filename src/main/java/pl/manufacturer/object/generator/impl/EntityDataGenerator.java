@@ -8,14 +8,9 @@ import pl.manufacturer.object.generator.DataGenerator;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.lang.reflect.*;
+import java.time.temporal.Temporal;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -38,7 +33,12 @@ public class EntityDataGenerator extends CommonDataGenerator implements DataGene
             throw new ObjectIsNotAnEntityException("Class " + clazz + " is not an entity. Use GenerationMode.POJO instead.");
         }
 
-        T object = instantiateClass(clazz);
+        T object;
+        try {
+            object = instantiateClass(clazz);
+        } catch (InstantiationException e) {
+            return handleInstatiationException(clazz);
+        }
 
         Map<String, Method> setMethodsByNames = Arrays.stream(clazz.getMethods())
                 .filter(method -> method.getName().contains(SETTER_KEYWORD))

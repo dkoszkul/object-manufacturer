@@ -136,6 +136,15 @@ public class PojoDataGeneratorTest {
         assertThat(object.getLocalDateTime()).isNotNull();
     }
 
+    @Test
+    public void shouldGenerateExampleSimpleEnumObject() {
+        // when
+        SimpleEnumObject object = dataGenerator.generateObject(SimpleEnumObject.class);
+
+        // then
+        assertThat(object).isNotNull();
+        assertThat(object.getSize()).isNotNull();
+    }
 
     @Test
     public void shouldGenerateExtendedObject() {
@@ -267,7 +276,7 @@ public class PojoDataGeneratorTest {
     @Test(expected = RuntimeException.class)
     public void shouldThrowRuntimeExceptionWhileInstantiatingClassExceptionOccured() {
         // when
-        dataGenerator.generateObject(Month.class);
+        dataGenerator.generateObject(FunctionalInterface.class);
     }
 
     @Test

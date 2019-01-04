@@ -6,6 +6,7 @@ import pl.manufacturer.object.util.BasicTypeValueGeneratorUtil;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.temporal.Temporal;
+import java.util.Random;
 
 public class CommonDataGenerator {
 
@@ -42,19 +43,30 @@ public class CommonDataGenerator {
         throw new NotABaseClassException("Class " + setterArgumentType + " is not a base class with available length setting.");
     }
 
-    protected <T> T instantiateClass(Class<T> clazz) {
+    protected <T> T instantiateClass(Class<T> clazz) throws InstantiationException {
+        try {
+            return clazz.newInstance();
+        } catch (IllegalAccessException |
+                InstantiationException e) {
+            throw new InstantiationException("Cannot instantiate class " + clazz);
+        }
+    }
+
+    protected <T> T handleInstatiationException(Class<T> clazz) {
         try {
             if (Temporal.class.isAssignableFrom(clazz)) {
                 Method now = clazz.getMethod("now");
                 return (T) now.invoke(null, null);
+            } else if (clazz.isEnum()) {
+                T[] enumConstants = clazz.getEnumConstants();
+                int i = new Random().nextInt(enumConstants.length - 1);
+                return enumConstants[i];
             }
 
-            return clazz.newInstance();
-        } catch (NoSuchMethodException |
-                IllegalAccessException |
-                InvocationTargetException |
-                InstantiationException e) {
-            throw new RuntimeException("Cannot instantiate class " + clazz);
+            throw new RuntimeException("Class " + clazz + " cannot be properly handled. Error.");
+
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException("Class " + clazz + " cannot be properly handled. Error.", e);
         }
     }
 }
