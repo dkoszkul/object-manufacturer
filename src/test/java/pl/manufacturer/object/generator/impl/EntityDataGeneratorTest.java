@@ -1,6 +1,7 @@
 package pl.manufacturer.object.generator.impl;
 
 import org.junit.Test;
+import pl.manufacturer.object.example.entity.PostOneToOneEntity;
 import pl.manufacturer.object.example.entity.SimpleEntity;
 import pl.manufacturer.object.example.pojo.simple.SimpleBooleanObject;
 import pl.manufacturer.object.exception.ObjectIsNotAnEntityException;
@@ -28,6 +29,7 @@ public class EntityDataGeneratorTest {
     public void shouldCreateSimpleEntity() {
         // when
         SimpleEntity result = dataGenerator.generateObject(SimpleEntity.class);
+
         // then
         assertThat(result).isNotNull();
         assertThat(result.getId()).isNotNull();
@@ -35,4 +37,17 @@ public class EntityDataGeneratorTest {
         assertThat(result.getLastName()).isNotEmpty().hasSize(50);
     }
 
+    @Test
+    public void shouldCreateEntityWithOneToOneBidarectionalAnnotation() {
+        // when
+        PostOneToOneEntity result = dataGenerator.generateObject(PostOneToOneEntity.class);
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isNotNull();
+        assertThat(result.getTitle()).isNotNull().hasSize(255);
+        assertThat(result.getDetails().getCreatedOn()).isNotNull();
+        assertThat(result.getDetails().getCreatedBy()).isNotNull().hasSize(255);
+        assertThat(result.getDetails().getPost()).isEqualTo(result);
+    }
 }

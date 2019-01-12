@@ -2,12 +2,11 @@ package pl.manufacturer.object.generator.impl;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import pl.manufacturer.object.example.entity.PostOneToOneEntity;
 import pl.manufacturer.object.example.pojo.extended.*;
 import pl.manufacturer.object.example.pojo.simple.*;
 import pl.manufacturer.object.generator.DataGenerator;
 
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.List;
 import java.util.Map;
 

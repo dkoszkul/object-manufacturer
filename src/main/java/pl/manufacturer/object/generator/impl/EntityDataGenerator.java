@@ -4,11 +4,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.manufacturer.object.exception.ObjectIsNotAnEntityException;
 import pl.manufacturer.object.generator.DataGenerator;
+import pl.manufacturer.object.mapkey.OneToOneMapKey;
+import pl.manufacturer.object.mapkey.OneToOneMapValue;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -25,6 +31,8 @@ public class EntityDataGenerator extends CommonDataGenerator implements DataGene
     public EntityDataGenerator(PojoDataGenerator pojoDataGenerator) {
         this.pojoDataGenerator = pojoDataGenerator;
     }
+
+    Map<OneToOneMapKey, OneToOneMapValue> objectByFieldNames_OneToOne = new HashMap<>();
 
     @Override
     public <T> T generateObject(Class<T> clazz, Type... classArgsTypes) {
@@ -49,7 +57,7 @@ public class EntityDataGenerator extends CommonDataGenerator implements DataGene
 
         for (Field field : nonStaticFields) {
             Optional<Column> columnAnnotation = getAnnotation(Column.class, field.getAnnotations());
-            if (columnAnnotation.isPresent()) {
+            if (columnAnnotation.isPresent() && String.class.equals(field.getType())) {
                 log.debug("Found Column annotation over {} field.", field.getName());
                 log.debug("Column has set length to {} characters.", columnAnnotation.get().length());
 
@@ -57,10 +65,48 @@ public class EntityDataGenerator extends CommonDataGenerator implements DataGene
                 Object value = generateBaseTypeValue(field.getType(), columnAnnotation.get().length());
                 invokeMethod(object, setMethodsByNames.get(setterMethodName), value);
             } else {
-                log.debug("\"{}\" has no @Column annotation", field.getName());
-                String setterMethodName = generateSetterMethodNameByFieldName(field.getName());
-                Object value = generateBaseTypeValue(field.getType());
-                invokeMethod(object, setMethodsByNames.get(setterMethodName), value);
+                Optional<OneToOne> oneToOneAnnotation = getAnnotation(OneToOne.class, field.getAnnotations());
+                if(oneToOneAnnotation.isPresent()) {
+                    log.debug("Found @OneToOne annotation over field " + field.getName());
+                    OneToOneMapKey.OneToOneMapKeyBuilder oneToOneMapKey = OneToOneMapKey.builder().withClazz(field.getType())
+                            .withFieldName(field.getName());
+                    if (oneToOneAnnotation.get().mappedBy() != null && !oneToOneAnnotation.get().mappedBy().isEmpty()) {
+                        log.debug("@OneToOne - mappedBy found [{}]", oneToOneAnnotation.get().mappedBy());
+                        oneToOneMapKey.withMappedByParameter(oneToOneAnnotation.get().mappedBy());
+
+                        OneToOneMapValue v = OneToOneMapValue.builder().withReferenceObject(object).build();
+                        objectByFieldNames_OneToOne.put(oneToOneMapKey.build(), v);
+                        Object o = generateObject(field.getType());
+                        String setterMethodName = generateSetterMethodNameByFieldName(field.getName());
+                        log.debug("{} / {}", field.getType(), setterMethodName);
+                        invokeMethod(object, setMethodsByNames.get(setterMethodName), o);
+                    } else {
+                        log.debug("@OneToOne - mappedBy NOT found. It is the main mapping. ");
+                        OneToOneMapKey.OneToOneMapKeyBuilder oneToOneMapKey2 = OneToOneMapKey.builder()
+                                .withClazz(field.getDeclaringClass())
+                                .withMappedByParameter(field.getName());
+
+                        OneToOneMapValue oneToOneMapValue = objectByFieldNames_OneToOne.get(oneToOneMapKey2.build());
+                        if(oneToOneMapValue != null) {
+                            log.debug("Value is not null. Field name: {}", field.getName());
+                            String setterMethodName = generateSetterMethodNameByFieldName(field.getName());
+                            log.debug("{}", object);
+                            log.debug("{}", setMethodsByNames.get(setterMethodName));
+                            log.debug("{}", oneToOneMapValue.getReferenceObject());
+                            invokeMethod(object, setMethodsByNames.get(setterMethodName), oneToOneMapValue.getReferenceObject());
+                        }
+//                        log.debug("{}", objectByFieldNames_OneToOne.get(oneToOneMapKey2.build()));
+//                        throw new RuntimeException("not finished.");
+                    }
+                } else {
+                    log.debug("\"{}\" has no @Column annotation", field.getName());
+                    String setterMethodName = generateSetterMethodNameByFieldName(field.getName());
+                    Object value = pojoDataGenerator.generateObject(field.getType());
+                    invokeMethod(object, setMethodsByNames.get(setterMethodName), value);
+                }
+
+
+
             }
         }
 
