@@ -12,6 +12,7 @@ Library writing in progress...
 
 ## Support
 Library supports:  
+
 |             POJO            	|                  ENTITY                 	|
 |:---------------------------:	|:---------------------------------------:	|
 | primitives                  	| everything from POJO mode (in progress) 	|
