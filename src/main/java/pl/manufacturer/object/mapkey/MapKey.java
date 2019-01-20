@@ -2,7 +2,7 @@ package pl.manufacturer.object.mapkey;
 
 import java.util.Objects;
 
-public class OneToOneMapKey {
+public class MapKey {
 
     private Class clazz;
 
@@ -40,7 +40,7 @@ public class OneToOneMapKey {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        OneToOneMapKey that = (OneToOneMapKey) o;
+        MapKey that = (MapKey) o;
         return Objects.equals(clazz, that.clazz) &&
                 Objects.equals(mappedByParameter, that.mappedByParameter);// &&
 //                Objects.equals(fieldName, that.fieldName);
@@ -78,12 +78,12 @@ public class OneToOneMapKey {
             return this;
         }
 
-        public OneToOneMapKey build() {
-            OneToOneMapKey oneToOneMapKey = new OneToOneMapKey();
-            oneToOneMapKey.setClazz(clazz);
-            oneToOneMapKey.setMappedByParameter(mappedByParameter);
-            oneToOneMapKey.setFieldName(fieldName);
-            return oneToOneMapKey;
+        public MapKey build() {
+            MapKey mapKey = new MapKey();
+            mapKey.setClazz(clazz);
+            mapKey.setMappedByParameter(mappedByParameter);
+            mapKey.setFieldName(fieldName);
+            return mapKey;
         }
     }
 }

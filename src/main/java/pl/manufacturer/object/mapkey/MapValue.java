@@ -1,6 +1,6 @@
 package pl.manufacturer.object.mapkey;
 
-public class OneToOneMapValue {
+public class MapValue {
 
     private Object referenceObject;
 
@@ -22,8 +22,8 @@ public class OneToOneMapValue {
         this.generatedObject = generatedObject;
     }
 
-    public static OneToOneMapValue.OneToOnaMapValueBuilder builder() {
-        return new OneToOneMapValue.OneToOnaMapValueBuilder();
+    public static MapValue.OneToOnaMapValueBuilder builder() {
+        return new MapValue.OneToOnaMapValueBuilder();
     }
 
     public static final class OneToOnaMapValueBuilder {
@@ -43,11 +43,11 @@ public class OneToOneMapValue {
             return this;
         }
 
-        public OneToOneMapValue build() {
-            OneToOneMapValue oneToOneMapValue = new OneToOneMapValue();
-            oneToOneMapValue.setReferenceObject(referenceObject);
-            oneToOneMapValue.setGeneratedObject(generatedObject);
-            return oneToOneMapValue;
+        public MapValue build() {
+            MapValue mapValue = new MapValue();
+            mapValue.setReferenceObject(referenceObject);
+            mapValue.setGeneratedObject(generatedObject);
+            return mapValue;
         }
     }
 }

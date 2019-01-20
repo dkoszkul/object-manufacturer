@@ -3,6 +3,7 @@ package pl.manufacturer.object.generator.impl;
 import org.junit.Ignore;
 import org.junit.Test;
 import pl.manufacturer.object.example.entity.manytooneandonetomany.Employee;
+import pl.manufacturer.object.example.entity.manytooneandonetomany.Phone;
 import pl.manufacturer.object.example.entity.onetoone.PostOneToOneEntity;
 import pl.manufacturer.object.example.entity.SimpleEntity;
 import pl.manufacturer.object.example.pojo.simple.SimpleBooleanObject;
@@ -54,9 +55,29 @@ public class EntityDataGeneratorTest {
     }
 
     @Test
-    @Ignore
     public void shouldCreateEntityWithOneToManyManyToOneAnnotation() {
         // when
         Employee result = dataGenerator.generateObject(Employee.class);
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isNotNull();
+        assertThat(result.getPostCode()).isNotNull().hasSize(255);
+        assertThat(result.getPhones()).isNotNull().hasSize(5);
+        result.getPhones().forEach(phone -> {
+            assertThat(phone.getId()).isNotNull();
+            assertThat(phone.getOwner()).isEqualTo(result);
+        });
+    }
+
+    @Test
+    public void shouldCreateEntityWithManyToOneOneToManyAnnotation() {
+        // when
+        Phone result = dataGenerator.generateObject(Phone.class);
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isNotNull();
+        assertThat(result.getOwner()).isNotNull();
     }
 }
