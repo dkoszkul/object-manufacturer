@@ -1,4 +1,4 @@
-package pl.manufacturer.object.example.entity;
+package pl.manufacturer.object.example.entity.onetoone;
 
 import javax.persistence.*;
 import java.util.Date;

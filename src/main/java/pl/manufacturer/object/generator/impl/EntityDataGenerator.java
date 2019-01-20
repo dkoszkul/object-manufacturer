@@ -7,9 +7,7 @@ import pl.manufacturer.object.generator.DataGenerator;
 import pl.manufacturer.object.mapkey.OneToOneMapKey;
 import pl.manufacturer.object.mapkey.OneToOneMapValue;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -57,16 +55,35 @@ public class EntityDataGenerator extends CommonDataGenerator implements DataGene
 
         for (Field field : nonStaticFields) {
             Optional<Column> columnAnnotation = getAnnotation(Column.class, field.getAnnotations());
-            if (columnAnnotation.isPresent() && String.class.equals(field.getType())) {
-                log.debug("Found Column annotation over {} field.", field.getName());
-                log.debug("Column has set length to {} characters.", columnAnnotation.get().length());
 
-                String setterMethodName = generateSetterMethodNameByFieldName(field.getName());
-                Object value = generateBaseTypeValue(field.getType(), columnAnnotation.get().length());
-                invokeMethod(object, setMethodsByNames.get(setterMethodName), value);
+            if(columnAnnotation.isPresent()) {
+                log.debug("@Column annotation is present over field {}.", field.getName());
+
+                if(String.class.equals(field.getType())) {
+                    log.debug("Type of the field is String.");
+                    log.debug("Column has set length to {} characters.", columnAnnotation.get().length());
+                    String setterMethodName = generateSetterMethodNameByFieldName(field.getName());
+                    Object value = generateBaseTypeValue(field.getType(), columnAnnotation.get().length());
+                    invokeMethod(object, setMethodsByNames.get(setterMethodName), value);
+
+                } else {
+                    log.debug("Type of the field is {}.", field.getType());
+                    String setterMethodName = generateSetterMethodNameByFieldName(field.getName());
+                    Object value = pojoDataGenerator.generateObject(field.getType());
+                    invokeMethod(object, setMethodsByNames.get(setterMethodName), value);
+                }
+
             } else {
+                log.debug("@Column annotation is absent over field {}.", field.getName());
                 Optional<OneToOne> oneToOneAnnotation = getAnnotation(OneToOne.class, field.getAnnotations());
+                Optional<OneToMany> oneToManyAnnotation = getAnnotation(OneToMany.class, field.getAnnotations());
+                Optional<ManyToOne> manyToOneAnnotation = getAnnotation(ManyToOne.class, field.getAnnotations());
+                Optional<ManyToMany> manyToManyAnnotation = getAnnotation(ManyToMany.class, field.getAnnotations());
                 if(oneToOneAnnotation.isPresent()) {
+                    log.debug("Found @OneToOne annotation over field {}.", field.getName());
+
+                    ////////////////////////////
+
                     log.debug("Found @OneToOne annotation over field " + field.getName());
                     OneToOneMapKey.OneToOneMapKeyBuilder oneToOneMapKey = OneToOneMapKey.builder().withClazz(field.getType())
                             .withFieldName(field.getName());
@@ -98,15 +115,25 @@ public class EntityDataGenerator extends CommonDataGenerator implements DataGene
 //                        log.debug("{}", objectByFieldNames_OneToOne.get(oneToOneMapKey2.build()));
 //                        throw new RuntimeException("not finished.");
                     }
+
+                    ///////////////////////////
+
+
+                } else if(oneToManyAnnotation.isPresent()) {
+                    log.debug("Found @OneToOne annotation over field {}.", field.getName());
+
+                } else if(manyToOneAnnotation.isPresent()) {
+                    log.debug("Found @OneToOne annotation over field {}.", field.getName());
+
+                } else if(manyToManyAnnotation.isPresent()) {
+                    log.debug("Found @OneToOne annotation over field {}.", field.getName());
+
                 } else {
-                    log.debug("\"{}\" has no @Column annotation", field.getName());
+                    log.debug("Not found any specific annotation over field {}.", field.getName());
                     String setterMethodName = generateSetterMethodNameByFieldName(field.getName());
                     Object value = pojoDataGenerator.generateObject(field.getType());
                     invokeMethod(object, setMethodsByNames.get(setterMethodName), value);
                 }
-
-
-
             }
         }
 

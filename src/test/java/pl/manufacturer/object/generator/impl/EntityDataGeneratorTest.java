@@ -1,7 +1,9 @@
 package pl.manufacturer.object.generator.impl;
 
+import org.junit.Ignore;
 import org.junit.Test;
-import pl.manufacturer.object.example.entity.PostOneToOneEntity;
+import pl.manufacturer.object.example.entity.manytooneandonetomany.Employee;
+import pl.manufacturer.object.example.entity.onetoone.PostOneToOneEntity;
 import pl.manufacturer.object.example.entity.SimpleEntity;
 import pl.manufacturer.object.example.pojo.simple.SimpleBooleanObject;
 import pl.manufacturer.object.exception.ObjectIsNotAnEntityException;
@@ -49,5 +51,12 @@ public class EntityDataGeneratorTest {
         assertThat(result.getDetails().getCreatedOn()).isNotNull();
         assertThat(result.getDetails().getCreatedBy()).isNotNull().hasSize(255);
         assertThat(result.getDetails().getPost()).isEqualTo(result);
+    }
+
+    @Test
+    @Ignore
+    public void shouldCreateEntityWithOneToManyManyToOneAnnotation() {
+        // when
+        Employee result = dataGenerator.generateObject(Employee.class);
     }
 }
