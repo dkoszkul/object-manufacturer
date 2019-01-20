@@ -36,6 +36,7 @@ public class EntityDataGenerator extends CommonDataGenerator implements DataGene
 
     Map<MapKey, MapValue> objectByFieldNames_OneToOne = new HashMap<>();
     Map<MapKey, MapValue> objectByFieldNames_OneToMany = new HashMap<>();
+    Map<MapKey, MapValue> objectByFieldNames_ManyToOne = new HashMap<>();
 
     @Override
     public <T> T generateObject(Class<T> clazz, Type... classArgsTypes) {
@@ -107,30 +108,40 @@ public class EntityDataGenerator extends CommonDataGenerator implements DataGene
 
                 } else if (oneToManyAnnotation.isPresent()) {
                     log.debug("[{}][@OneToMany] Found annotation over field.", field.getName());
+
                     if (oneToManyAnnotation.get().mappedBy() != null && !oneToManyAnnotation.get().mappedBy().isEmpty()) {
                         log.debug("@OneToMany - mappedBy found [{}]", oneToManyAnnotation.get().mappedBy());
 
-                        if (Collection.class.isAssignableFrom(field.getType())) {
-                            log.debug("{} field is a collection.", field.getName());
+                        MapKey mapKeyManyToOne = MapKey.builder()
+                                .withClazz(field.getDeclaringClass())
+                                .withFieldName(oneToManyAnnotation.get().mappedBy()).build();
+                        if (objectByFieldNames_ManyToOne.get(mapKeyManyToOne) != null) {
+                            log.debug("There is already @ManyToOne for this collection found. Using it.");
                             String setterMethodName = generateSetterMethodNameByFieldName(field.getName());
+                            List list = new ArrayList();
+                            list.add(objectByFieldNames_ManyToOne.get(mapKeyManyToOne).getReferenceObject());
+                            invokeMethod(object, setMethodsByNames.get(setterMethodName), list);
+                        } else {
+                            if (Collection.class.isAssignableFrom(field.getType())) {
+                                log.debug("{} field is a collection.", field.getName());
+                                String setterMethodName = generateSetterMethodNameByFieldName(field.getName());
 
-                            Class collectionArgumentType = ArgumentTypeUtil.getCollectionArgumentTypeFromSetterMethod(setMethodsByNames.get(setterMethodName));
+                                Class collectionArgumentType = ArgumentTypeUtil.getCollectionArgumentTypeFromSetterMethod(setMethodsByNames.get(setterMethodName));
 
-                            MapKey mapKey = MapKey.builder()
-                                    .withClazz(collectionArgumentType)
-                                    .withFieldName(field.getName())
-                                    .withMappedByParameter(oneToManyAnnotation.get().mappedBy()).build();
-                            MapValue mapValue = MapValue.builder().withReferenceObject(object).build();
-                            objectByFieldNames_OneToMany.put(mapKey, mapValue);
+                                MapKey mapKey = MapKey.builder()
+                                        .withClazz(collectionArgumentType)
+                                        .withFieldName(field.getName())
+                                        .withMappedByParameter(oneToManyAnnotation.get().mappedBy()).build();
+                                MapValue mapValue = MapValue.builder().withReferenceObject(object).build();
+                                objectByFieldNames_OneToMany.put(mapKey, mapValue);
 
-                            Stream valuesStream = IntStream.range(0, BASE_ARRAY_SIZE)
-                                    .mapToObj(i -> generateObject(collectionArgumentType));
+                                Stream valuesStream = IntStream.range(0, BASE_ARRAY_SIZE)
+                                        .mapToObj(i -> generateObject(collectionArgumentType));
 
-                            log.debug("{} / {}", field.getType(), setterMethodName);
-                            invokeMethod(object, setMethodsByNames.get(setterMethodName), valuesStream.collect(Collectors.toList()));
+                                log.debug("{} / {}", field.getType(), setterMethodName);
+                                invokeMethod(object, setMethodsByNames.get(setterMethodName), valuesStream.collect(Collectors.toList()));
+                            }
                         }
-
-
                     }
 
                 } else if (manyToOneAnnotation.isPresent()) {
@@ -147,6 +158,14 @@ public class EntityDataGenerator extends CommonDataGenerator implements DataGene
                         invokeMethod(object, setMethodsByNames.get(setterMethodName), mapValue.getReferenceObject());
                     } else {
                         log.debug("There is no objects with @OneToMany annotation registered for this field.");
+                        MapKey mapKeyManyToOne = MapKey.builder()
+                                .withClazz(field.getType())
+                                .withFieldName(field.getName()).build();
+                        MapValue mapValueManyToOne = MapValue.builder().withReferenceObject(object).build();
+                        objectByFieldNames_ManyToOne.put(mapKeyManyToOne, mapValueManyToOne);
+                        String setterMethodName = generateSetterMethodNameByFieldName(field.getName());
+                        Object o = generateObject(field.getType());
+                        invokeMethod(object, setMethodsByNames.get(setterMethodName), o);
                     }
 
                 } else if (manyToManyAnnotation.isPresent()) {

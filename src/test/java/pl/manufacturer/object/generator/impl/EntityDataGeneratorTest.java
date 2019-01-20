@@ -79,5 +79,9 @@ public class EntityDataGeneratorTest {
         assertThat(result).isNotNull();
         assertThat(result.getId()).isNotNull();
         assertThat(result.getOwner()).isNotNull();
+        assertThat(result.getOwner()).isNotNull();
+        assertThat(result.getOwner().getId()).isNotNull();
+        assertThat(result.getOwner().getPhones()).isNotNull().hasSize(1);
+        assertThat(result.getOwner().getPhones().get(0)).isEqualTo(result);
     }
 }
